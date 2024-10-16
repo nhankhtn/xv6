@@ -31,12 +31,12 @@ int main() {
 }
 
 void primes(int* p) {
-    int prime, n;
+    int prime;
     if (read(p[0], &prime, sizeof(prime)) <= 0) {
         close(p[0]);
         exit(0);
     }
-    printf("%d\n", prime);
+    printf("prime %d\n", prime);
 
     int p_next[2];
     if (pipe(p_next) == -1) {
@@ -55,6 +55,7 @@ void primes(int* p) {
         primes(p_next);
     } else {
         close(p_next[0]);
+        int n;
         while (read(p[0], &n, sizeof(n)) > 0) {
             if (n % prime != 0) {
                 write(p_next[1], &n, sizeof(n));
