@@ -6,15 +6,11 @@
 
 #define BUF_SIZE 512
 
-int main(int argc, char *argv[]) {
-//   printf(1, "argc : %d\n", argc);
-//   for(int i = 0; i < argc; i++){
-//     printf(1, "argv[%d] : %s\n", i, argv[i]);
-//   }
+int main(int argc, char* argv[]) {
     char buf[BUF_SIZE];
-    char *cmd[MAXARG];
+    char* cmd[MAXARG];
     int i, n, pid;
-    int cmd_argc = argc - 1; 
+    int cmd_argc = argc - 1;
     // xargs echo => cmd_argc = 1
     // Copy the command arguments
     // xargs echo
@@ -22,8 +18,6 @@ int main(int argc, char *argv[]) {
         cmd[i] = argv[i + 1];
     }
     while ((n = read(0, buf, sizeof(buf))) > 0) {
-        // printf(1, "n : %d\n", n);
-        // printf(1, "buf : %s\n", buf);
         int start = 0;
         for (i = 0; i < n; i++) {
             if (buf[i] == '\n') {
@@ -31,10 +25,9 @@ int main(int argc, char *argv[]) {
                 cmd[cmd_argc] = &buf[start]; //his sets the cmd[cmd_argc] to point to the start of the current argument in the buffer buf.
                 cmd[cmd_argc + 1] = 0; // marking the end of the arguments array for the exec function.
 
-                if ((pid = fork()) == 0) { //This line creates a new process by calling fork(). The fork() function returns 0 to the child process and the child's PID to the parent process.
-                    // for(int i = 0; i <  ; i++){
-                    //   printf(1, "cmd[%d] : %s\n", i, cmd[i]);
-                    // }
+                //This line creates a new process by calling fork(). The fork() function returns 0 
+                // to the child process and the child's PID to the parent process.
+                if ((pid = fork()) == 0) {
                     exec(cmd[0], cmd);
                     printf("exec %s failed\n", cmd[0]);
                     exit(1);
