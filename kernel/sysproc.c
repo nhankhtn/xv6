@@ -94,6 +94,18 @@ sys_uptime(void)
 }
 
 uint64
+sys_trace(void)
+{
+    int mask;
+    if (argint(0, &mask), mask == 0) { // mask == 0 để kiểm tra cụ thể giá trị được truyền
+        return -1;
+    }
+
+    myproc()->trace_mask = mask; // Lưu mask vào cấu trúc của process
+    return 0;
+}
+
+uint64
 sys_sysinfo(void)
 {
   uint64 addr;
