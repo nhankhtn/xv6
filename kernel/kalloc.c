@@ -91,6 +91,7 @@ kalloc(void)
   return (void*)r;
 }
 
+
 // Collect the amount of free memory
 uint64
 freemem(void)
@@ -108,3 +109,4 @@ freemem(void)
   release(&kmem.lock);
   return byte_cnt * PGSIZE;  
 }
+
