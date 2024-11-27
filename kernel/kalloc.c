@@ -108,3 +108,4 @@ freemem(void)
   release(&kmem.lock);
   return byte_cnt * PGSIZE;  
 }
+
