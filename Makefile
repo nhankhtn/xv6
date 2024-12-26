@@ -50,7 +50,6 @@ OBJS += \
 	$K/sprintf.o
 endif
 
-
 ifeq ($(LAB),net)
 OBJS += \
 	$K/e1000.o \
@@ -234,6 +233,7 @@ endif
 ifeq ($(LAB),pgtbl)
 UPROGS += \
 	$U/_pgtbltest
+CFLAGS +=-DLAB_PGTBL
 endif
 
 ifeq ($(LAB),lock)
