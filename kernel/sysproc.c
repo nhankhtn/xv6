@@ -74,7 +74,43 @@ sys_sleep(void)
 int
 sys_pgaccess(void)
 {
-  // lab pgtbl: your code here.
+  uint64 start_va;
+  int num_pages;
+  uint64 user_mask;
+
+  argaddr(0, &start_va);
+  argint(1, &num_pages);
+  argaddr(2, &user_mask);
+
+  if (num_pages > 64)
+  {
+    return -1; // Limit the number of pages to 64
+  }
+
+  uint64 mask = 0;
+  uint64 va0, va1;
+  pte_t *pte;
+  va0 = PGROUNDDOWN(start_va);
+  pagetable_t pagetable = myproc()->pagetable;
+
+  for (int i = 0; i < num_pages; i++)
+  {
+    va1 = va0 + i * PGSIZE;
+    if ((pte = walk(pagetable, va1, 1)) == 0)
+      return -1;
+    if ((*pte & PTE_A) == PTE_A)
+    { // the A flag is 1
+      // update mask at position i is 1
+      mask = mask | (1 << i);
+      // reset A flag to 0
+      *pte = *pte & ~(1L << 6);
+    }
+  }
+  //copy mask in kernel to user space and check if error
+  if (copyout(pagetable, user_mask, (char *)&mask, sizeof(mask)) < 0)
+  {
+    return -1;
+  }
   return 0;
 }
 #endif
