@@ -7,6 +7,22 @@
 #include "syscall.h"
 #include "defs.h"
 
+// Số lượng tham số cho từng system call
+static int num_args[] = {
+    [SYS_fork]  = 0,
+    [SYS_exit]  = 1,
+    [SYS_wait]  = 1,
+    [SYS_pipe]  = 1,
+    [SYS_read]  = 3,
+    [SYS_kill]  = 2,
+    [SYS_exec]  = 2,
+    [SYS_open]  = 2,
+    [SYS_write] = 3,
+    [SYS_close] = 1,
+    [SYS_trace] = 1,
+};
+
+
 // Fetch the uint64 at addr from the current process.
 int
 fetchaddr(uint64 addr, uint64 *ip)
@@ -177,8 +193,26 @@ syscall(void)
     // and store its return value in p->trapframe->a0
     p->trapframe->a0 = syscalls[num]();
     if ((p->trace_mask & (1 << num)) != 0) { // Kiểm tra mask
-        printf("%d: syscall %s -> %ld\n", 
+        printf("%d: syscall %s -> %ld ", 
             p->pid, syscallname(num), p->trapframe->a0);
+
+        int arg0 = 0, arg1 = 0, arg2 = 0;
+
+        if (num_args[num] >= 1)
+            argint(0, &arg0);
+        if (num_args[num] >= 2)
+            argint(1, &arg1);
+        if (num_args[num] >= 3)
+            argint(2, &arg2);
+
+        if (num_args[num] > 0)
+            printf("arg0=%d ", arg0);
+        if (num_args[num] > 1)
+            printf("arg1=%d ", arg1);
+        if (num_args[num] > 2)
+            printf("arg2=%d ", arg2);
+
+        printf("\n");
     }
   } else {
     printf("%d %s: unknown sys call %d\n",
