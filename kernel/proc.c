@@ -698,6 +698,22 @@ procdump(void)
   }
 }
 
+// Challenge
+// Load average
+int
+compute_loadavg(void) {
+    struct proc *p = myproc();
+    int count = 0;
+
+    // Duyệt qua tất cả các tiến trình
+    for (p = proc; p < &proc[NPROC]; p++) {
+        if (p->state == RUNNABLE || p->state == SLEEPING) {
+            count++;
+        }
+    }
+    return count; // trả về số tiến trình đang hoạt động hoặc chờ
+}
+
 // Collect the number of processes
 uint64
 nproc(void)
@@ -725,6 +741,7 @@ sysinfo(uint64 addr) // addr is a user virtual address, pointing to a struct sys
 
   info.freemem = freemem();
   info.nproc = nproc();
+  info.loadavg = compute_loadavg();
 
   if(copyout(p->pagetable, addr, (char *)&info, sizeof(info)) < 0)
     return -1;

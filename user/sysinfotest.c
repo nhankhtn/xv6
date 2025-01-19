@@ -141,6 +141,19 @@ void testbad() {
   }
 }
 
+// Challenge load average
+void
+testloadavg() {
+  struct sysinfo info;
+  sinfo(&info); // Gọi sysinfo()
+
+  printf("Load average: %lu\n", info.loadavg); // In ra giá trị loadavg
+  if (info.loadavg < 0) { // Giá trị không hợp lệ
+    printf("FAIL: loadavg is negative\n");
+    exit(1);
+  }
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -148,6 +161,7 @@ main(int argc, char *argv[])
   testcall();
   testmem();
   testproc();
+  testloadavg(); // Kiểm tra load average
   printf("sysinfotest: OK\n");
   exit(0);
 }

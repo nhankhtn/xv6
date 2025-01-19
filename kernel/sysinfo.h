@@ -1,4 +1,6 @@
 struct sysinfo {
   uint64 freemem;   // amount of free memory (bytes)
   uint64 nproc;     // number of process
+  //challenge
+  uint64 loadavg;  // load average
 };
